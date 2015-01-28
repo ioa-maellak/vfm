@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `vfm` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `vfm`;
 -- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: vfm
+-- Host: localhost    Database: vfm
 -- ------------------------------------------------------
 -- Server version	5.6.21-log
 
@@ -30,7 +30,7 @@ CREATE TABLE `sector_ekab` (
   `code` varchar(45) DEFAULT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `sector_ekab` (
 
 LOCK TABLES `sector_ekab` WRITE;
 /*!40000 ALTER TABLE `sector_ekab` DISABLE KEYS */;
+INSERT INTO `sector_ekab` VALUES (1,'Ambulance ','1','ambulance ');
 /*!40000 ALTER TABLE `sector_ekab` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +62,7 @@ CREATE TABLE `vehicle` (
   PRIMARY KEY (`id`),
   KEY `vehicle_sectorekab_fk` (`sector_ekab_id`),
   CONSTRAINT `vehicle_sectorekab_fk` FOREIGN KEY (`sector_ekab_id`) REFERENCES `sector_ekab` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,6 +71,7 @@ CREATE TABLE `vehicle` (
 
 LOCK TABLES `vehicle` WRITE;
 /*!40000 ALTER TABLE `vehicle` DISABLE KEYS */;
+INSERT INTO `vehicle` VALUES (2,'INI 3435',123,'2012-12-12','2012-12-12','NA','car',1),(3,'INO 4546',123,'2012-12-12','2012-12-12','NA','CAR',1);
 /*!40000 ALTER TABLE `vehicle` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,9 +123,11 @@ CREATE TABLE `vehicle_shift` (
   `shift_used_fuel` int(11) DEFAULT NULL,
   `shift_start_datetime` datetime DEFAULT NULL,
   `shift_end_datetime` datetime DEFAULT NULL,
+  `vehicle_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `vehicleshift_vehicle_fk` FOREIGN KEY (`id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `vehicleshift_vehicle_fk_idx` (`vehicle_id`),
+  CONSTRAINT `vehicleshift_vehicle_fk` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,6 +136,7 @@ CREATE TABLE `vehicle_shift` (
 
 LOCK TABLES `vehicle_shift` WRITE;
 /*!40000 ALTER TABLE `vehicle_shift` DISABLE KEYS */;
+INSERT INTO `vehicle_shift` VALUES (9,12000,23333,111,'2015-01-28 10:32:08','2015-01-28 10:33:20',NULL),(10,12345,NULL,NULL,'2015-01-28 10:32:51','2015-01-28 10:32:51',NULL);
 /*!40000 ALTER TABLE `vehicle_shift` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -144,4 +149,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-01-27 10:10:10
+-- Dump completed on 2015-01-28 10:36:11
