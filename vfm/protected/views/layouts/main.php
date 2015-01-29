@@ -32,6 +32,7 @@
 				array('label'=>'Home', 'url'=>array('/site/index')),				
                                 array('label'=>'Vehicles ', 'url'=>array('/vehicle/admin'), 'visible'=>!Yii::app()->user->isGuest),
                                 array('label'=>'Service ', 'url'=>array('/vehicleService/admin'), 'visible'=>!Yii::app()->user->isGuest),
+                                array('label'=>'Shift ', 'url'=>array('/vehicleShift/admin'), 'visible'=>!Yii::app()->user->isGuest),
                                 array('label'=>'Sectors ', 'url'=>array('/sectorEkab/admin'), 'visible'=>!Yii::app()->user->isGuest),
                                 array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
 				array('label'=>'Contact', 'url'=>array('/site/contact')),

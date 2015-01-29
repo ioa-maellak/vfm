@@ -8,7 +8,8 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'EKAB VFM SYSTEM',
-
+        //date_default_timezone_set('Europe/Athens');
+	'timeZone'=> 'Europe/Athens',
 	// preloading 'log' component
 	'preload'=>array('log'),
 
@@ -59,7 +60,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=vfm',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => 'root',
+			'password' => 'mgav221114',
 			'charset' => 'utf8',
 		),
 		
