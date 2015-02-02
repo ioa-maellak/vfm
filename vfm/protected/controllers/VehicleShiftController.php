@@ -64,8 +64,7 @@ class VehicleShiftController extends Controller
 	{
 		$model=new VehicleShift('create');
                 // set shift start datetime to current datetime
-              	$model->shift_start_datetime = strftime("%d %B %Y %H:%M:%S");
-     
+                $model->shift_start_datetime = date("d/m/Y H:i:s");
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -91,16 +90,28 @@ class VehicleShiftController extends Controller
 		$model=$this->loadModel($id);
                 //if shift end time is null then get current datetime
                  if (!isset($model->shift_end_datetime)){
-                   // $model->shift_end_datetime = strftime("%d %B %Y %H:%M:%S");
-                      $model->shift_end_datetime = date_format(new DateTime(), "Y/m/d H:i:s") ;
-                 }
-		// Uncomment the following line if AJAX validation is needed
+                       // get current datetime
+                      $model->shift_end_datetime = date("d/m/Y H:i:s");
+                }
+                else{
+                    //get datetime from MySql database and change format to day-moth-year & time    
+                    $model->shift_end_datetime = date("d/m/Y H:i:s", strtotime($model->shift_end_datetime)) ;
+                }
+                // To view vehicle license plate - vehicle shift instance accesses its vehicle instance
+                 // $model->vehicle_id = $model->vehicle->license_plate;
+                  $model->vehicle_license_plate = $model->vehicle->license_plate;
+                // Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+                  
 		if(isset($_POST['VehicleShift']))
 		{
 			$model->attributes=$_POST['VehicleShift'];
-			if($model->save())
+                        // set shift end time to MySql datetime format
+                        $model->shift_end_datetime = date("Y-m-d H:i:s",strtotime(str_replace('/','-',$model->shift_end_datetime)));
+                        // set vehicle id to its foreign key value
+                       // $model->vehicle_id = $model->vehicle->id;
+                        
+			if($model->save(true, array('id', 'shift_start_km', 'shift_end_km', 'shift_used_fuel', 'shift_start_datetime', 'shift_end_datetime', 'vehicle_id')))
 				$this->redirect(array('view','id'=>$model->id));
 		}
 

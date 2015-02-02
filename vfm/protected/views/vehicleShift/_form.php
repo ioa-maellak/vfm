@@ -36,8 +36,9 @@
         
         <div class="row">
             <?php echo $form->labelEx($model,'vehicle_id'); ?>
-        <?php if ($this->getAction()->id == 'update'): ?>
-            <?php echo $form->textField($model,'vehicle_id', array('readonly'=>true)); ?>
+            <?php if ($this->getAction()->id == 'update'): ?>
+                <?php echo $form->textField($model,'vehicle_id', array('hidden'=>true)); ?>
+                <?php echo $form->textField($model,'vehicle_license_plate', array('readonly'=>true)); ?>
             <?php elseif ($this->getAction()->id == 'create'): ?>
 		<?php echo $form->dropDownList($model,'vehicle_id', CHtml::listData(Vehicle::model()->findAll(), 'id', 'license_plate'), array('empty' => 'Select a vehicle', 'options' => array('id'=>  array('selected' => true),))); ?>
             <?php endif; ?>

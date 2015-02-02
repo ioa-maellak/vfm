@@ -17,7 +17,9 @@
  */
 class VehicleShift extends CActiveRecord
 {
-	/**
+	//declare vehicle license plate attribute
+        public $vehicle_license_plate;
+        /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -64,10 +66,12 @@ class VehicleShift extends CActiveRecord
             if ($this->isNewRecord){
               $this->shift_start_datetime = new CDbExpression('NOW()');
             }
+             
             //set shift end time to mysql current date time format
             if (isset($model->shift_end_datetime)){
                 $this->shift_end_datetime = new CDbExpression('NOW()');
             }
+           
             return parent::beforeSave();
         }
 	/**
