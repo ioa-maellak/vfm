@@ -54,31 +54,31 @@
         <?php endif; ?>
             <?php echo $form->error($model,'shift_start_km'); ?>
 	</div>
+        <?php if(Yii::app()->controller->action->id!='create') { ?>
+            <div class="row">
+                <?php echo $form->labelEx($model,'shift_end_km'); ?>
+            <?php if ($this->getAction()->id == 'create'): ?>
+                <?php echo $form->textField($model,'shift_end_km', array('readonly'=>true)); ?>
+            <?php elseif ($this->getAction()->id == 'update'): ?>
+                <?php echo $form->textField($model, 'shift_end_km', array('readonly'=>false));?>
+            <?php endif; ?>
+                <?php echo $form->error($model,'shift_end_km'); ?>
+            </div>
         
-	<div class="row">
-            <?php echo $form->labelEx($model,'shift_end_km'); ?>
-        <?php if ($this->getAction()->id == 'create'): ?>
-            <?php echo $form->textField($model,'shift_end_km', array('readonly'=>true)); ?>
-        <?php elseif ($this->getAction()->id == 'update'): ?>
-            <?php echo $form->textField($model, 'shift_end_km', array('readonly'=>false));?>
-        <?php endif; ?>
-	    <?php echo $form->error($model,'shift_end_km'); ?>
-	</div>
-        
-	<div class="row">
-            <?php echo $form->labelEx($model,'shift_used_fuel'); ?>
-        <?php if ($this->getAction()->id == 'create'): ?>
-            <?php echo $form->textField($model,'shift_used_fuel', array('readonly'=>true)); ?>
-        <?php elseif ($this->getAction()->id == 'update'): ?>
-            <?php echo $form->textField($model, 'shift_used_fuel', array('readonly'=>false));?>
-        <?php endif; ?>
-            <?php echo $form->error($model,'shift_used_fuel'); ?>
-	</div>
-          
+            <div class="row">
+                <?php echo $form->labelEx($model,'shift_used_fuel'); ?>
+            <?php if ($this->getAction()->id == 'create'): ?>
+                <?php echo $form->textField($model,'shift_used_fuel', array('readonly'=>true)); ?>
+            <?php elseif ($this->getAction()->id == 'update'): ?>
+                <?php echo $form->textField($model, 'shift_used_fuel', array('readonly'=>false));?>
+            <?php endif; ?>
+                <?php echo $form->error($model,'shift_used_fuel'); ?>
+            </div>
+         <?php } ?>
 	<div class="row buttons">
             <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
-
+       
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
