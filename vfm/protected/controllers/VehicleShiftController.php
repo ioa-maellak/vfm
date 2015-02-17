@@ -1,6 +1,6 @@
 <?php
 
-class VehicleShiftController extends Controller
+class VehicleShiftController extends RController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -14,10 +14,9 @@ class VehicleShiftController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+                        'rights',
 		);
-	}
+        }
 
 	/**
 	 * Specifies the access control rules.
@@ -30,14 +29,17 @@ class VehicleShiftController extends Controller
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view'),
 				'users'=>array('*'),
+                               // 'roles'=>array('user'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','update'),
+                                //'roles'=>array('user'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
 				'users'=>array('admin'),
+                               // 'roles'=>array('user'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -72,7 +74,7 @@ class VehicleShiftController extends Controller
 		{
 			$model->attributes=$_POST['VehicleShift'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin','id'=>$model->id));
 		}
 
 		$this->render('create',array(
@@ -112,7 +114,7 @@ class VehicleShiftController extends Controller
                        // $model->vehicle_id = $model->vehicle->id;
                         
 			if($model->save(true, array('id', 'shift_start_km', 'shift_end_km', 'shift_used_fuel', 'shift_start_datetime', 'shift_end_datetime', 'vehicle_id')))
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('admin','id'=>$model->id));
 		}
 
 		$this->render('update',array(
