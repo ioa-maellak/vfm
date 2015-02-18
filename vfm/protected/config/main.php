@@ -12,6 +12,8 @@ return array(
 	'timeZone'=> 'Europe/Athens',
 	// preloading 'log' component
 	'preload'=>array('log'),
+        'sourceLanguage'=>'en',
+        'language'=>'el',
 
 	// autoloading model and component classes
         // update import with user and rights extensions 
