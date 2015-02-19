@@ -153,6 +153,10 @@ div.search-form
 	background: #eee;
 }
 
+div.portlet-content
+{
+    background: white;
+}
 .portlet
 {
 
