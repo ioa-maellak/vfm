@@ -110,7 +110,7 @@ CREATE TABLE `profiles` (
   `firstname` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`user_id`),
   CONSTRAINT `user_profile_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,6 +209,7 @@ CREATE TABLE `sector_ekab` (
 
 LOCK TABLES `sector_ekab` WRITE;
 /*!40000 ALTER TABLE `sector_ekab` DISABLE KEYS */;
+INSERT INTO `sector_ekab` VALUES (1,'Ambulance ','1','ambulance ');
 /*!40000 ALTER TABLE `sector_ekab` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,7 +235,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `email` (`email`),
   KEY `status` (`status`),
   KEY `superuser` (`superuser`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -243,6 +244,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','webmaster@example.com','9a24eff8c15a6a141ece27eb6947da0f','2015-02-13 15:44:12','2015-02-20 07:45:50',1,1),(2,'demo','fe01ce2a7fbac8fafaed7c982a04e229','demo@example.com','099f825543f7850cc038b90aaff39fac','2015-02-13 15:44:12','2015-02-16 08:11:17',0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,6 +264,7 @@ CREATE TABLE `vehicle` (
   `status` varchar(45) DEFAULT NULL,
   `vehicle_type` varchar(45) DEFAULT NULL,
   `sector_ekab_id` int(10) unsigned DEFAULT '1',
+  `nextservice_km` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `vehicle_sectorekab_fk` (`sector_ekab_id`),
   CONSTRAINT `vehicle_sectorekab_fk` FOREIGN KEY (`sector_ekab_id`) REFERENCES `sector_ekab` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -274,6 +277,7 @@ CREATE TABLE `vehicle` (
 
 LOCK TABLES `vehicle` WRITE;
 /*!40000 ALTER TABLE `vehicle` DISABLE KEYS */;
+INSERT INTO `vehicle` VALUES (2,'INI 3435',123,'2012-12-12','2012-12-12','NA','car',1,30000),(3,'INO 4546',10000,'2012-12-12','2012-12-12','NA','CAR',1,30000),(4,'INA 1111',12,'2012-12-12','2012-12-12','NA','CAR',1,35000);
 /*!40000 ALTER TABLE `vehicle` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,7 +303,7 @@ CREATE TABLE `vehicle_service` (
   PRIMARY KEY (`id`),
   KEY `vehicleservice_vehicle_fk` (`vehicle_id`),
   CONSTRAINT `vehicleservice_vehicle_fk` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,6 +312,7 @@ CREATE TABLE `vehicle_service` (
 
 LOCK TABLES `vehicle_service` WRITE;
 /*!40000 ALTER TABLE `vehicle_service` DISABLE KEYS */;
+INSERT INTO `vehicle_service` VALUES (6,'annual','2014-02-02','',4444444,'',NULL,'','','',4),(7,'annual','2014-02-02','text',20000,'',NULL,'','','',4);
 /*!40000 ALTER TABLE `vehicle_service` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -329,7 +334,7 @@ CREATE TABLE `vehicle_shift` (
   PRIMARY KEY (`id`),
   KEY `vehicleshift_vehicle_fk_idx` (`vehicle_id`),
   CONSTRAINT `vehicleshift_vehicle_fk` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,6 +343,7 @@ CREATE TABLE `vehicle_shift` (
 
 LOCK TABLES `vehicle_shift` WRITE;
 /*!40000 ALTER TABLE `vehicle_shift` DISABLE KEYS */;
+INSERT INTO `vehicle_shift` VALUES (13,20000,NULL,NULL,'2015-02-20 13:00:27',NULL,4);
 /*!40000 ALTER TABLE `vehicle_shift` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -350,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-17  9:19:26
+-- Dump completed on 2015-02-20 17:35:28
