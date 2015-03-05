@@ -12,13 +12,14 @@
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
+        'enableAjaxValidation'=>false,
+	
+
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
-            <?php echo $form->errorSummary($model); ?>
-        <h3 align="centre">
+        <?php echo $form->errorSummary($model); ?>
         <?php if ($this->getAction()->id == 'create'): ?>
             <div class="row">
             <?php echo $form->labelEx($model,'shift_start_datetime'); ?>
@@ -32,15 +33,24 @@
             <?php echo $form->error($model,'shift_end_datetime'); ?>
             </div>
         <?php endif; ?>
-        </h3>
-        
+              
         <div class="row">
             <?php echo $form->labelEx($model,'vehicle_id'); ?>
             <?php if ($this->getAction()->id == 'update'): ?>
                 <?php echo $form->textField($model,'vehicle_id', array('hidden'=>true)); ?>
                 <?php echo $form->textField($model,'vehicle_license_plate', array('readonly'=>true)); ?>
             <?php elseif ($this->getAction()->id == 'create'): ?>
-		<?php echo $form->dropDownList($model,'vehicle_id', CHtml::listData(Vehicle::model()->findAll(), 'id', 'license_plate'), array('empty' => 'Select a vehicle', 'options' => array('id'=>  array('selected' => true),))); ?>
+                <?php echo $form->dropDownList($model,'vehicle_id',CHtml::listData(Vehicle::model()->findAll(), 'id', 'license_plate'), array('empty' => 'Select a vehicle', 'id'=>'vehicle_id',
+                                            'ajax' =>
+                                            array('type' => 'POST',
+                                                   'url' => CController::createUrl('CheckNextService'),
+                                                   'update' => '#service_alert',
+                                            )));?>      
+                                    
+                     
+                <div style="color: #ff0000" id="service_alert">
+                     <?php //To display the next service alert. ?>  
+                </div>
             <?php endif; ?>
             <?php echo $form->error($model,'vehicle_id'); ?>
 	</div>
@@ -51,6 +61,7 @@
             <?php echo $form->textField($model, 'shift_start_km', array('readonly'=>true));?>
  	<?php else: ?>
             <?php echo $form->textField($model, 'shift_start_km', array('readonly'=>false));?>
+  
         <?php endif; ?>
             <?php echo $form->error($model,'shift_start_km'); ?>
 	</div>
@@ -73,10 +84,11 @@
                 <?php echo $form->textField($model, 'shift_used_fuel', array('readonly'=>false));?>
             <?php endif; ?>
                 <?php echo $form->error($model,'shift_used_fuel'); ?>
+               
             </div>
          <?php } ?>
 	<div class="row buttons">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save');?>
 	</div>
        
 <?php $this->endWidget(); ?>

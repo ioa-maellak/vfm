@@ -12,10 +12,12 @@
  * @property string $status
  * @property string $vehicle_type
  * @property string $sector_ekab_id
+ * @property integer $nextservice_km
  *
  * The followings are the available model relations:
  * @property SectorEkab $sectorEkab
  * @property VehicleService[] $vehicleServices
+ * @property VehicleShift[] $vehicleShifts
  */
 class Vehicle extends CActiveRecord
 {
@@ -35,13 +37,13 @@ class Vehicle extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('running_distance', 'numerical', 'integerOnly'=>true),
+			array('running_distance, nextservice_km', 'numerical', 'integerOnly'=>true),
 			array('license_plate, status, vehicle_type', 'length', 'max'=>45),
 			array('sector_ekab_id', 'length', 'max'=>10),
 			array('manufacture_date, registration_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, license_plate, running_distance, manufacture_date, registration_date, status, vehicle_type, sector_ekab_id', 'safe', 'on'=>'search'),
+			array('id, license_plate, running_distance, manufacture_date, registration_date, status, vehicle_type, sector_ekab_id, nextservice_km', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,6 +57,7 @@ class Vehicle extends CActiveRecord
 		return array(
 			'sectorEkab' => array(self::BELONGS_TO, 'SectorEkab', 'sector_ekab_id'),
 			'vehicleServices' => array(self::HAS_MANY, 'VehicleService', 'vehicle_id'),
+			'vehicleShifts' => array(self::HAS_MANY, 'VehicleShift', 'vehicle_id'),
 		);
 	}
 
@@ -72,6 +75,7 @@ class Vehicle extends CActiveRecord
 			'status' => 'Status',
 			'vehicle_type' => 'Vehicle Type',
 			'sector_ekab_id' => 'Sector Ekab',
+			'nextservice_km' => 'Nextservice Km',
 		);
 	}
 
@@ -101,6 +105,7 @@ class Vehicle extends CActiveRecord
 		$criteria->compare('status',$this->status,true);
 		$criteria->compare('vehicle_type',$this->vehicle_type,true);
 		$criteria->compare('sector_ekab_id',$this->sector_ekab_id,true);
+		$criteria->compare('nextservice_km',$this->nextservice_km);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

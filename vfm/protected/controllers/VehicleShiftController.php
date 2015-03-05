@@ -32,7 +32,8 @@ class VehicleShiftController extends RController
                                // 'roles'=>array('user'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+                               // 'actions'=>array('create','checkService'),
+				'actions'=>array('create', 'update'),
                                 //'roles'=>array('user'),
 				'users'=>array('@'),
 			),
@@ -46,7 +47,47 @@ class VehicleShiftController extends RController
 			),
 		);
 	}
-
+        
+        /**
+	 * Displays alert for the vehicle next service.
+	 * This method checks if the vehicle current km is more than the km for the next service
+         * If vehicle current km > next service km then alert is diplayed - next service is overdue.
+         * else the amount of vehicle current km is between 5000 and 10000 less than the next annual service km 
+         * then alert is displayed - next service is due.
+	 */
+        public function actionCheckNextService() {     
+                              
+                $vehicle= $_POST['VehicleShift']['vehicle_id']; 
+                if($vehicle != ''){
+                    //find the selected vehicle's current kilometers and the km for the next annual service
+                    $connection=Yii::app()->db;
+                    $sql = 'SELECT running_distance, nextservice_km from vehicle  where id= "'.$vehicle.'"';
+                    $command=$connection->createCommand($sql);
+                    
+                    foreach ($command->queryAll()as $value) {
+                     $vehicle_km=$value['running_distance'];
+                     $next_service_km =$value['nextservice_km'];
+                    }
+                    //calulate the remaining km for the next annual service
+                    $due_km = $next_service_km - $vehicle_km;
+                    /*if the selected vehicle total current km is greater than trhe next annual service km
+                    * then alert message for service is overdue
+                    * else if the remaining km is between 5000 and 10000 then displays alert message for next 
+                    * annual service is due
+                    */
+                    if ($vehicle_km > $next_service_km){
+                      echo 'Alert! Service is overdue!';  
+                    }
+                    elseif ($due_km <= 10000 && $due_km >= 5000 ){
+                       echo 'Alert! Service is due in '. $due_km. ' km';   
+                    }
+                }
+                else{
+                   echo '';
+                }
+                
+        }
+    
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -65,14 +106,22 @@ class VehicleShiftController extends RController
 	public function actionCreate()
 	{
 		$model=new VehicleShift('create');
+      
                 // set shift start datetime to current datetime
                 $model->shift_start_datetime = date("d/m/Y H:i:s");
+            
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['VehicleShift']))
 		{
 			$model->attributes=$_POST['VehicleShift'];
+                        //find vehicle for the selected vehicle id and update the running distance field
+                        $vehicle_id = $model->vehicle_id;
+                        $vehicle = Vehicle::model()->findByPK($vehicle_id);
+                        $vehicle->running_distance = $model->shift_start_km;
+                        $vehicle->save();
+                        
 			if($model->save())
 				$this->redirect(array('admin','id'=>$model->id));
 		}
@@ -91,7 +140,7 @@ class VehicleShiftController extends RController
 	{
 		$model=$this->loadModel($id);
                 //if shift end time is null then get current datetime
-                 if (!isset($model->shift_end_datetime)){
+                if (!isset($model->shift_end_datetime)){
                        // get current datetime
                       $model->shift_end_datetime = date("d/m/Y H:i:s");
                 }
@@ -100,20 +149,23 @@ class VehicleShiftController extends RController
                     $model->shift_end_datetime = date("d/m/Y H:i:s", strtotime($model->shift_end_datetime)) ;
                 }
                 // To view vehicle license plate - vehicle shift instance accesses its vehicle instance
-                 // $model->vehicle_id = $model->vehicle->license_plate;
-                  $model->vehicle_license_plate = $model->vehicle->license_plate;
+                $model->vehicle_license_plate = $model->vehicle->license_plate;
+               
                 // Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-                  
+        
 		if(isset($_POST['VehicleShift']))
 		{
 			$model->attributes=$_POST['VehicleShift'];
                         // set shift end time to MySql datetime format
                         $model->shift_end_datetime = date("Y-m-d H:i:s",strtotime(str_replace('/','-',$model->shift_end_datetime)));
-                        // set vehicle id to its foreign key value
-                       // $model->vehicle_id = $model->vehicle->id;
-                        
-			if($model->save(true, array('id', 'shift_start_km', 'shift_end_km', 'shift_used_fuel', 'shift_start_datetime', 'shift_end_datetime', 'vehicle_id')))
+                        //find vehicle for the selected vehicle id and update the running distance field
+                        /*$vehicle_id = $model->vehicle_id;
+                        $vehicle = Vehicle::model()->findByPK($vehicle_id);
+                        $vehicle->running_distance = $model->shift_end_km;
+                        $vehicle->save();*/
+			
+                         if($model->save(true, array('id', 'shift_start_km', 'shift_end_km', 'shift_used_fuel', 'shift_start_datetime', 'shift_end_datetime', 'vehicle_id')))
 				$this->redirect(array('admin','id'=>$model->id));
 		}
 
