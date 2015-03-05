@@ -61,4 +61,11 @@ class RController extends CController
 		else
 			throw new CHttpException(403, $message);
 	}
+         //Initialises language picker
+        public function init()
+        {
+            Yii::import('ext.LangPick.ELangPick'); 
+            ELangPick::setLanguage();
+            parent::init();
+        }
 }

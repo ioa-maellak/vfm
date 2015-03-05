@@ -22,7 +22,11 @@ class RAuthorizer extends CApplicationComponent
 	*/
 	public function init()
 	{
-		parent::init();
+            //Initialises language picker
+            Yii::import('ext.LangPick.ELangPick'); 
+            ELangPick::setLanguage();
+           
+                parent::init();
 
 		$this->_authManager = Yii::app()->getAuthManager();
 	}
@@ -462,4 +466,5 @@ class RAuthorizer extends CApplicationComponent
 	{
 		return $this->_authManager;
 	}
+        
 }
