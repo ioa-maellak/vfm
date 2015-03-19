@@ -78,7 +78,16 @@ class Vehicle extends CActiveRecord
 			'nextservice_km' => 'Nextservice Km',
 		);
 	}
-
+         /**
+	 * Before save new vehicle, set current datetime in database format
+	 */
+        public function beforeSave() {
+           
+              $this->manufacture_date= date("Y-m-d H:i:s",strtotime(str_replace('/','-',$this->manufacture_date)));
+              $this->registration_date= date("Y-m-d H:i:s",strtotime(str_replace('/','-',$this->registration_date)));
+            
+            return parent::beforeSave();
+        }
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *

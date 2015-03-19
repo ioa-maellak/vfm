@@ -24,7 +24,11 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('registration_date')); ?>:</b>
 	<?php echo CHtml::encode($data->registration_date); ?>
 	<br />
-
+        
+        <b><?php echo CHtml::encode($data->getAttributeLabel('nextservice_km')); ?>:</b>
+	<?php echo CHtml::encode($data->nextservice_km); ?>
+	<br />
+        
 	<b><?php echo CHtml::encode($data->getAttributeLabel('status')); ?>:</b>
 	<?php echo CHtml::encode($data->status); ?>
 	<br />

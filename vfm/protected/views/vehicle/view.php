@@ -26,6 +26,7 @@ $this->menu=array(
 		'running_distance',
 		'manufacture_date',
 		'registration_date',
+                'nextservice_km',
 		'status',
 		'vehicle_type',
 		'sector_ekab_id',

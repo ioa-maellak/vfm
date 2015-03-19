@@ -33,13 +33,19 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'manufacture_date'); ?>
-		<?php echo $form->textField($model,'manufacture_date'); ?>
+	        <?php  $this->widget('CJuiDatePicker',array(
+                                    'language'=>Yii::app()->language,
+                                   'model'=>$model,
+                                   'attribute'=>'manufacture_date',)); ?>
 		<?php echo $form->error($model,'manufacture_date'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'registration_date'); ?>
-		<?php echo $form->textField($model,'registration_date'); ?>
+		<?php  $this->widget('CJuiDatePicker',array(
+                                     'language'=>Yii::app()->language,
+                                     'model'=>$model,
+                                     'attribute'=>'registration_date',)); ?>
 		<?php echo $form->error($model,'registration_date'); ?>
 	</div>
 
@@ -57,7 +63,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'sector_ekab_id'); ?>
-		<?php echo $form->textField($model,'sector_ekab_id',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->dropDownList($model,'sector_ekab_id',CHtml::listData(SectorEkab::model()->findAll(), 'id', 'name'), array('empty' => 'Select a sector', 'id'=>'sector_ekab_id',));?>      
 		<?php echo $form->error($model,'sector_ekab_id'); ?>
 	</div>
 
