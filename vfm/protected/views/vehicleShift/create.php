@@ -3,8 +3,10 @@
 /* @var $model VehicleShift */
 
 $this->breadcrumbs=array(
-	'Vehicle Shifts'=>array('index'),
-	'Create',
+	
+    Yii::t('strings', 'Vehicle Shifts')=>array('admin'),
+    Yii::t('strings', 'Create'),
+	
 );
 
 $this->menu=array(
@@ -13,6 +15,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create VehicleShift</h1>
+<h1><?php echo Yii::t('strings', 'Create VehicleShift'); ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

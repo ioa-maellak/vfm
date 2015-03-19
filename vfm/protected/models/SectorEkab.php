@@ -47,7 +47,9 @@ class SectorEkab extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'vehicles' => array(self::HAS_MANY, 'Vehicle', 'sector_ekab_id'),
+                        'profiles'=>array(self::HAS_MANY, 'Profile', 'sector_id'),
 		);
+                
 	}
 
 	/**

@@ -12,8 +12,9 @@ return array(
 	'timeZone'=> 'Europe/Athens',
 	// preloading 'log' component
 	'preload'=>array('log'),
+    
         'sourceLanguage'=>'en',
-        'language'=>'el',
+       'language'=>'el',
 
 	// autoloading model and component classes
         // update import with user and rights extensions 
@@ -24,6 +25,8 @@ return array(
                 'application.modules.user.components.*',
                 'application.modules.rights.*',
                 'application.modules.rights.components.*',
+                'zii.widgets.jui.*',
+
 
 	),
 
@@ -42,6 +45,9 @@ return array(
                 'tableUsers' => 'users',
                 'tableProfiles' => 'profiles',
                 'tableProfileFields' => 'profiles_fields',
+                'profileRelations'=>array(
+                        'sector'=>array(CActiveRecord::BELONGS_TO, 'SectorEkab', 'sector_id')),
+
                 ),
                 //add rights extension reference
                 'rights'=>array(
@@ -67,7 +73,16 @@ return array(
                 'defaultRoles'=>array('Authenticated', 'Guest'),
                
                 ),
-
+                
+                'widgetFactory' => array(
+                'widgets' => array(
+                 'CJuiDatePicker'=>array(
+                                    'options'=>array('dateFormat'=>'dd-mm-yy', 
+                                                'changeMonth'=>'true', 
+                                                'changeYear'=>'true',),
+                                     'htmlOptions'=>array('style'=>'height:20px;'))
+                    ),
+                ),
                // uncomment the following to enable URLs in path-format
 		/*
 		'urlManager'=>array(
@@ -90,7 +105,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=vfm',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'mgav221114',
 			'charset' => 'utf8',
 		),
 		

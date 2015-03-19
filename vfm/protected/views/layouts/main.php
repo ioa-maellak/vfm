@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="language" content="en" />
+	
 
 	<!-- blueprint CSS framework -->
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" />
@@ -39,14 +39,15 @@
                 array('label'=>Yii::t('strings', 'About'), 'url'=>array('/site/page', 'view'=>'about')),
 		array('label'=>Yii::t('strings', 'Contact'), 'url'=>array('/site/contact')),
                     
-                array('label'=>Yii::t('strings', 'Vehicles'), 'url'=>array('/vehicle/admin'), 'visible'=>!Yii::app()->user->isGuest),
-                array('label'=>Yii::t('strings', 'Service'), 'url'=>array('/vehicleService/admin'), 'visible'=>!Yii::app()->user->isGuest),
-                array('label'=>Yii::t('strings', 'Shift'), 'url'=>array('/vehicleShift/admin'), 'visible'=>!Yii::app()->user->isGuest),
-                array('label'=>Yii::t('strings', 'Sectors'), 'url'=>array('/sectorEkab/admin'), 'visible'=>!Yii::app()->user->isGuest),
+                array('label'=>Yii::t('strings', 'Vehicles'), 'url'=>array('/vehicle/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') &&!Yii::app()->user->isGuest),
+                array('label'=>Yii::t('strings', 'Service'), 'url'=>array('/vehicleService/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') &&!Yii::app()->user->isGuest),
+                array('label'=>Yii::t('strings', 'Shift'), 'url'=>array('/vehicleShift/create'), 'visible'=>!Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest ),
+                array('label'=>Yii::t('strings', 'Shift'), 'url'=>array('/vehicleShift/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin')),
+                array('label'=>Yii::t('strings', 'Sectors'), 'url'=>array('/sectorEkab/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
                
                 //main menu access to users & rights extensions
-                array('label'=>Yii::t('strings', 'Users'), 'url'=>array('/user/admin'), 'visible'=>!Yii::app()->user->isGuest),
-                array('label'=>Yii::t('strings', 'Rights'), 'url'=>array('/rights'), 'visible'=>!Yii::app()->user->isGuest),
+                array('label'=>Yii::t('strings', 'Users'), 'url'=>array('/user/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
+                array('label'=>Yii::t('strings', 'Rights'), 'url'=>array('/rights'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
                 array('url'=>Yii::app()->getModule('user')->loginUrl, 'label'=>Yii::app()->getModule('user')->t("Login"), 'visible'=>Yii::app()->user->isGuest),
                 array('url'=>Yii::app()->getModule('user')->registrationUrl, 'label'=>Yii::app()->getModule('user')->t("Register"), 'visible'=>Yii::app()->user->isGuest),
                 array('url'=>Yii::app()->getModule('user')->profileUrl, 'label'=>Yii::app()->getModule('user')->t("Profile"), 'visible'=>!Yii::app()->user->isGuest),
