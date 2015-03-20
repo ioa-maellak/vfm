@@ -79,7 +79,9 @@ class VehicleShiftController extends RController
                       echo 'Alert! Service is overdue!';  
                     }
                     elseif ($due_km <= 10000 && $due_km >= 5000 ){
-                       echo 'Alert! Service is due in '. $due_km. ' km';   
+                       echo Yii::t('strings', 'Alert! Service is due in');
+                       echo $due_km;
+                       echo Yii::t('strings', ' km');   
                     }
                 }
                 else{
@@ -112,18 +114,25 @@ class VehicleShiftController extends RController
             
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+                
+               
 		if(isset($_POST['VehicleShift']))
 		{
 			$model->attributes=$_POST['VehicleShift'];
                         //find vehicle for the selected vehicle id and update the running distance field
-                        $vehicle_id = $model->vehicle_id;
-                        $vehicle = Vehicle::model()->findByPK($vehicle_id);
-                        $vehicle->running_distance = $model->shift_start_km;
-                        $vehicle->save();
+                         
                         
-			if($model->save())
-				$this->redirect(array('admin','id'=>$model->id));
+			if($model->save()){
+                                
+                                //find the selected vehicle in vehicle table and update the running distance field
+                                $vehicle_id = $model->vehicle_id;
+                                $vehicle = Vehicle::model()->findByPK($vehicle_id);
+                                $vehicle->running_distance = $model->shift_start_km;
+                                if ($vehicle->save()) 
+                              
+				//$this->redirect(array('admin','id'=>$model->id));
+                                $this->redirect(Yii::app()->user->returnUrl);
+                               }
 		}
 
 		$this->render('create',array(
@@ -159,14 +168,18 @@ class VehicleShiftController extends RController
 			$model->attributes=$_POST['VehicleShift'];
                         // set shift end time to MySql datetime format
                         $model->shift_end_datetime = date("Y-m-d H:i:s",strtotime(str_replace('/','-',$model->shift_end_datetime)));
-                        //find vehicle for the selected vehicle id and update the running distance field
-                        /*$vehicle_id = $model->vehicle_id;
-                        $vehicle = Vehicle::model()->findByPK($vehicle_id);
-                        $vehicle->running_distance = $model->shift_end_km;
-                        $vehicle->save();*/
+                        
 			
                          if($model->save(true, array('id', 'shift_start_km', 'shift_end_km', 'shift_used_fuel', 'shift_start_datetime', 'shift_end_datetime', 'vehicle_id')))
-				$this->redirect(array('admin','id'=>$model->id));
+                         {        
+				//find the selected vehicle in vehicle table and update the running distance field
+                                $vehicle_id = $model->vehicle_id;
+                                $vehicle = Vehicle::model()->findByPK($vehicle_id);
+                                $vehicle->running_distance = $model->shift_end_km;
+                                if ($vehicle->save())
+                                    
+                                $this->redirect(array('admin','id'=>$model->id));
+                         }
 		}
 
 		$this->render('update',array(
