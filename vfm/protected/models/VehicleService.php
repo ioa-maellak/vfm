@@ -17,11 +17,14 @@
  * @property string $vehicle_id
  *
  * The followings are the available model relations:
+ * @property vServiceVParts $vServiceVParts
  * @property Vehicle $vehicle
  */
 class VehicleService extends CActiveRecord
 {
-	/**
+        
+           public $vehicle_nextservice_km;
+        /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -39,7 +42,7 @@ class VehicleService extends CActiveRecord
 		return array(
 			array('running_distance, vehicle_part_quantity', 'numerical', 'integerOnly'=>true),
 			array('service_status, vehicle_part, price, invoice_number', 'length', 'max'=>45),
-			array('vehicle_id', 'length', 'max'=>10),
+                        array('vehicle_id', 'required'),
 			array('service_date, description, garage', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -55,6 +58,7 @@ class VehicleService extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                       'vehicleparts' => array(self::HAS_MANY, 'VehicleParts', 'VServiceVParts(v_service_id, v_part_id)'),
 			'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
 		);
 	}
@@ -70,6 +74,7 @@ class VehicleService extends CActiveRecord
 			'service_date' => 'Service Date',
 			'description' => 'Description',
 			'running_distance' => 'Running Distance',
+                        'vehicle_nextservice_km' => 'Next Annual Service Km',
 			'vehicle_part' => 'Vehicle Part',
 			'vehicle_part_quantity' => 'Vehicle Part Quantity',
 			'price' => 'Price',
@@ -78,7 +83,16 @@ class VehicleService extends CActiveRecord
 			'vehicle_id' => 'Vehicle',
 		);
 	}
-
+      
+        /**
+	 * Before save new shift, set current datetime in database format
+	 */
+        public function beforeSave() {
+           
+              $this->service_date= date("Y-m-d H:i:s",strtotime(str_replace('/','-',$this->service_date)));
+              
+              return parent::beforeSave();
+        }
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
