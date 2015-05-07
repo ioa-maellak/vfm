@@ -20,8 +20,11 @@ $this->breadcrumbs=array(
 $form=$this->beginWidget('CActiveForm', array(
 'id'=>'default-parent-form',
 'enableAjaxValidation'=>true,
+'clientOptions' => array('validateOnSubmit' => true, 'validateOnChange' => false, 'beforeValidate' => 'js:beforeValidate'),
 'htmlOptions' => array('enctype' => 'multipart/form-data'),
 ));
+
+
 
 echo $form->errorSummary(array($model,$partsmodel));
 
@@ -40,32 +43,14 @@ $tabs['Service Parts'] = array(
 'content'=>$this->renderPartial('_formserviceparts', array(
 'form' => $form,
 'partsmodel'=>$partsmodel,
-//'items'=>$items,
 ),
 true),
 );
-/*
-$tabs['Service Parts'] = array(
-'id'=>'dataServicePartsTab',
-'content'=>$this->renderPartial('_formserviceparts', array(
-'form' => $form,
-'partsmodel'=>$partsmodel,
-),
-true),
-);*/
-//$tabs['Parts'] = array(
-//'id'=>'dataPartsTab',
-//'content'=>$this->renderPartial('createsp', array(
-//'form' => $form,
-//'partsmodel'=>$partsmodel,
-//),
-//true),
-//);
-
+//$tabs_disabled = array(1);
 $this->widget('zii.widgets.jui.CJuiTabs', array(
 'tabs' => $tabs,
 'options'=>array(
-               'collapsible' => false,
+            'collapsible' => false,
 	    'selected'=>isset(Yii::app()->session['tabid'])?Yii::app()->session['tabid']:0,
 	    'select'=>'js:function(event, ui) { 
 	            var index=ui.index;
@@ -74,6 +59,7 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
 	                "data":"tab="+index,
 	            });
 	    }',
+           // 'disabled' => $tabs_disabled,
 	 ),
   
      //'cssFile' => Yii::app()->baseUrl . '/vfm/css/main.css',
@@ -82,9 +68,25 @@ $this->widget('zii.widgets.jui.CJuiTabs', array(
 ));
 
 
-		 echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); 
-	
+	 echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); 
+          
+	 
 $this->endWidget(); ?>
+    
 
 </div><!-- form -->
 
+
+<?php
+$js=<<<EOJ
+function beforeValidate() {
+       var i=true;
+      if($("#vehicle_id").val() === "")  i=false;
+       if(i===false)
+                alert("Error: You must select a vehicle!");
+        return i;
+        }
+EOJ;
+Yii::app()->clientScript->registerScript('beforeValidate', $js);
+?>
+        

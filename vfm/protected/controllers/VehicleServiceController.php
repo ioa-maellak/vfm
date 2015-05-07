@@ -54,9 +54,8 @@ class VehicleServiceController extends RController
 			'model'=>$this->loadModel($id),
 		));
 	}
-
-	/**
-	 * Creates a new model.
+  	/**
+	 * Creates a new service model and service vehicle parts model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
@@ -65,36 +64,10 @@ class VehicleServiceController extends RController
                 $partsmodel=new VServiceVParts;
                 
                 $this->performAjaxValidation(array($model,$partsmodel));
- 
-               /*  $items = array();
-                   
-                 //  if (isset($_POST['VServiceVParts']) && is_array($_POST['VServiceVParts'])) {
-                   //    foreach($_POST['VServiceVParts'] as $i=>$item) {
-                        //   echo 'items array';
-                         // print_r($item);
-                    // $items[$i]= $item;
-                 //    print_r($items[$i]);
-                      // }
-                    
-                   //    echo 'items array';
-                       
-                       //}
-                          if (isset($_POST['VServiceVParts']) && is_array($_POST['VServiceVParts'])) {
-                               //  foreach ($items as $i=>$partsmodel){
-                                 
-                            //      echo 'model  array';
-                              //   print_r($_POST['VServiceVParts']['v_part_id']);
-                               
-                                    //   if(isset($_POST['VServiceVParts'][$i])){
-                               //  $partsmodel->attributes= $_POST['VServiceVParts']['v_part_id']; 
-                                //  $partsmodel->attributes= $_POST['VServiceVParts']['description'];
-                                    
-                                 //}
-                                          
-                          }*/
-                
+               
+                            
                 if(isset($_POST['VehicleService'])) {
-                    // populate input data to $a and $b
+                    // populate input service data to $model
                     $model->attributes=$_POST['VehicleService'];
 
                     // validate service model
@@ -111,10 +84,9 @@ class VehicleServiceController extends RController
                             $vehicle->nextservice_km = $model->vehicle_nextservice_km;
                             if ($vehicle->save()) {}
                                     
-                            // Iterate over each item from the submitted form
+                            // Iterate over each vehicle part from the submitted form
                             
                             if (isset($_POST['VServiceVParts']) && is_array($_POST['VServiceVParts']) && $model->id) {
-                               
                                     $i=0;
                                     foreach ($_POST['VServiceVParts']['v_part_id'] as $i=>$VServiceVParts) {
                                            $partsmodel=new VServiceVParts;
@@ -128,8 +100,6 @@ class VehicleServiceController extends RController
                                            $partsmodel->save(true);
                                            $i++;
                                     }  
-                                                            
-                                           
                             }   
                         Yii::app()->session['tabid'] = 0;
                         // ...redirect to another page
@@ -137,6 +107,7 @@ class VehicleServiceController extends RController
                   
                     }
                     else{
+                        
                             Yii::app()->session['tabid'] = 0;
                            
                     }
@@ -146,7 +117,6 @@ class VehicleServiceController extends RController
                     $this->render('create',array(
 			'model'=>$model,
                        'partsmodel'=>$partsmodel,
-                    
                     ));
         }
 
@@ -166,16 +136,73 @@ class VehicleServiceController extends RController
  		
                 // retrieve vehicle parts to be updated in a batch mode
                 $vehicle_parts=$this->getVehiclePartsToUpdate($id);
-                //Get and save each vehicle part modifications.
-                if(isset($_POST['VServiceVParts']))
-                {
-                    $valid=true;
-                    foreach($vehicle_parts as $i=>$partsmodel)
-                    {                        
-                       $partsmodel->attributes=$_POST['VServiceVParts'][$i];
-                       $partsmodel->save();
+            
+                //Get and save each existing or new vehicle parts.
+                if (isset($_POST['VServiceVParts']) && is_array($_POST['VServiceVParts']) && $model->id){
+                    // if there are no vehicle parts then create vehicle parts 
+                    if (count($vehicle_parts)== 0){
+                   
+                            $vehiclepart=array();
+                            $vehicleparts[]=$_POST['VServiceVParts'];
+                            $vehiclecounter = 1; 
+                            foreach($vehicleparts as $key=>$attributes){
+                                      
+                                foreach($attributes as $key=>$attribute){
+                                        
+                                    foreach ($attribute as $id=>$value){
+                                   
+                                        if ($id == 'v_part_id'){
+                                            //if array not empty add part id and save to model 
+                                            if (empty($vehiclepart)) { 
+                                                $vehiclepart[$id]=$value;
+                                            }
+                                            else{
+                                                    $partsmodel=new VServiceVParts;
+                                                    $partsmodel->v_service_id = $model->id;  
+                                                    $partsmodel->attributes = $vehiclepart;
+                                                    $valid=$partsmodel->validate();
+                                                    if($valid) {
+                                                        $partsmodel->save();
+                                                    }else{
+                                                    print_r($partsmodel->getErrors());
+                                                    }
+                                                    //clear array
+                                                    unset($vehiclepart);
+                                                    // add next vehicle part id to array;
+                                                    $vehiclepart[$id]=$value;
+                                            }     
+                                       }
+                                       else{
+                                            
+                                            // add last vehicle part
+                                            $totalpartvalues= count($attributes);
+                                            if ($vehiclecounter >= $totalpartvalues){
+                                                 $vehiclepart[$id]=$value; 
+                                                 $partsmodel=new VServiceVParts;
+                                                 $partsmodel->v_service_id = $model->id;
+                                                 $partsmodel->attributes = $vehiclepart; 
+                                                 $partsmodel->save();
+                                            }
+                                            // add other vehicle part attributes
+                                            $vehiclepart[$id]=$value; 
+                                        }
+                                        
+                                        
+                                    }
+                                         
+                                        $vehiclecounter++;
+                                         
+                            }
+                        }
                     }
-                    
+                    //Update vehicle parts.
+                    else{
+                         $valid=true;
+                         foreach($vehicle_parts as $i=>$partsmodel) {                        
+                            $partsmodel->attributes=$_POST['VServiceVParts'][$i];
+                            $partsmodel->save();
+                        }
+                    } 
                 }
               
                 //Get and save service modifications
@@ -190,14 +217,14 @@ class VehicleServiceController extends RController
                                 $vehicle->nextservice_km = $model->vehicle_nextservice_km;
                                 if ($vehicle->save()) 
                                 //tab session set to zero.
-                                Yii::app()->session['tabid'] = 0;  
+                               // Yii::app()->session['tabid'] = 0;  
                                 //redirect to view page for the current service.
 				$this->redirect(array('view','id'=>$model->id));
                         }
 		}
-                //tab session set to zero.
+                //tab session is set to zero.
                 Yii::app()->session['tabid'] = 0; 
-                $this->render('update',array('model'=>$model, 'vehicle_parts'=>$vehicle_parts));
+                 $this->render('update',array('model'=>$model, 'vehicle_parts'=>$vehicle_parts));
         }
         /*
          * Gets the vehicle parts for a particular service model.
@@ -205,44 +232,44 @@ class VehicleServiceController extends RController
 	 * @param integer $id the ID of the service model to find its vehicle parts.
          */
         public function getVehiclePartsToUpdate($id) {
-        // Create an empty list of records
-        $vehicle_parts = array();
-        // Iterate over each vehicle part from the submitted form
-        if (isset($_POST['partsmodel']) && is_array($_POST['partsmodel'])) {
-            foreach ($_POST['partsmodel'] as $partsmodel) {
-                // If item id is available, read the record from database 
-               // if ( array_key_exists('v_service_id', $partsmodel) ){
-                    $vehicle_parts[] = VServiceVParts::model()->findAllByAttributes(array('v_service_id' => $id) ); 
-                    
-               // }
-                // Otherwise create a new record
-               // else {
-                 //   $items[] = new VServiceVParts();
-               // }
-            }
-        }
-        else
-        {
-            $partsmodel = new VServiceVParts();
-            foreach ($partsmodel as $i=>$partsmodel) {
-                $vehicle_part[] = VServiceVParts::model()->findAllByAttributes(array('v_service_id' => $id) );
-            } 
-              //$vehicle_parts is an array of multiple arrays of vehicle atributes.
-              $vehicle_parts_counter=count($vehicle_part);
-              //initialise loop counters.
-              $r=0; 
-              $i=1;
-              //Iterate over each vehicle part attribute and add values to $vehicle_parts array
-              foreach($vehicle_part as $i=>$vehicle_part){
-                //for each column there are values with total number  equal to count(items1) for current column
-                if ($r<count($vehicle_part)){
-                $vehicle_parts[$r]= $vehicle_part[$r];
-                $r=$r+1;
+                // Create an empty list of records
+                $vehicle_parts = array();
+                // Iterate over each vehicle part from the submitted form
+                if (isset($_POST['partsmodel']) && is_array($_POST['partsmodel'])) {
+                    foreach ($_POST['partsmodel'] as $partsmodel) {
+                        // If item id is available, read the record from database 
+                        if ( array_key_exists('v_service_id', $partsmodel) ){
+                            $vehicle_parts[] = VServiceVParts::model()->findAllByAttributes(array('v_service_id' => $id) ); 
+
+                        }
+                        // Otherwise create a new record
+                        else {
+                            $vehicle_parts[] = new VServiceVParts();
+                        }
+                    }
                 }
-            }
+                else
+                {
+                    $partsmodel = new VServiceVParts();
+                    foreach ($partsmodel as $i=>$partsmodel) {
+                        $vehicle_part[] = VServiceVParts::model()->findAllByAttributes(array('v_service_id' => $id) );
+                    } 
+                      //$vehicle_parts is an array of multiple arrays of vehicle atributes.
+                      $vehicle_parts_counter=count($vehicle_part);
+                      //initialise loop counters.
+                      $r=0; 
+                      $i=1;
+                      //Iterate over each vehicle part attribute and add values to $vehicle_parts array
+                      foreach($vehicle_part as $i=>$vehicle_part){
+                        //for each column there are values with total number  equal to count(items1) for current column
+                        if ($r<count($vehicle_part)){
+                        $vehicle_parts[$r]= $vehicle_part[$r];
+                        $r=$r+1;
+                        }
+                    }
+                }
+                return $vehicle_parts;
         }
-        return $vehicle_parts;
-    }
 	/**
 	 * Deletes a particular service model and its vehicle parts.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -325,14 +352,9 @@ class VehicleServiceController extends RController
         
         public function loadPartsModel(array $id)
 	{
-		//$partsmodel = new VServiceVParts();
-               // $partsmodel->v_service_id = $id;
-            //    $partsmodel=  VServiceVParts::model()->with('vService')->findAll(array('v_service_id'=>$id));
-               // $partsmodel = VServiceVParts::model()->findAllByAttributes($id) );
-              $partsmodel=VServiceVParts::model()->findByPk($id);
-               // $authors = VehicleService::model()->with('vServiceVParts')->findAll(array('limit' => 10));
-                //$items = Item::model()->findAll(array('index'=>'id'));
-		if($partsmodel===null)
+		
+                $partsmodel=VServiceVParts::model()->findByPk($id);
+             	if($partsmodel===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $partsmodel;
 	}
@@ -344,15 +366,10 @@ class VehicleServiceController extends RController
 	{
 		
              if(isset($_POST['ajax']) && $_POST['ajax']==='default-parent-form')
-    {
-        echo CActiveForm::validate($models);
-        Yii::app()->end();
-    }
-            
-           // if(isset($_POST['ajax']) && $_POST['ajax']==='vehicle-service-form')
-		//{
-//			echo CActiveForm::validate($model);
-//			Yii::app()->end();
-//		}
+            {
+                echo CActiveForm::validate($models);
+                Yii::app()->end();
+            }
+         
 	}
 }
