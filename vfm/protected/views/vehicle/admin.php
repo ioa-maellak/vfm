@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'View Vehicles due to Service', 'url'=>array('viewVehicleForService')),
+	array('label'=>'List Vehicle', 'url'=>array('index')),
 	array('label'=>'Create Vehicle', 'url'=>array('create')),
 );
 
