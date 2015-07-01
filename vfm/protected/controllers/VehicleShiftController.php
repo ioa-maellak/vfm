@@ -70,15 +70,15 @@ class VehicleShiftController extends RController
                     }
                     //calulate the remaining km for the next annual service
                     $due_km = $next_service_km - $vehicle_km;
-                    /*if the selected vehicle total current km is greater than trhe next annual service km
+                    /*if the selected vehicle total current km is greater than the next annual service km
                     * then alert message for service is overdue
                     * else if the remaining km is between 5000 and 10000 then displays alert message for next 
                     * annual service is due
                     */
                     if ($vehicle_km > $next_service_km){
-                      echo 'Alert! Service is overdue!';  
+                   //   echo 'Alert! Service is overdue!';  
                     }
-                    elseif ($due_km <= 10000 && $due_km >= 5000 ){
+                    elseif ($due_km <= 1000 ){
                        echo Yii::t('strings', 'Alert! Service is due in');
                        echo $due_km;
                        echo Yii::t('strings', ' km');   
