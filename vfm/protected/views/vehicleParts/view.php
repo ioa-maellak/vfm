@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List VehicleParts', 'url'=>array('index')),
+	//array('label'=>'List VehicleParts', 'url'=>array('index')),
 	array('label'=>'Create VehicleParts', 'url'=>array('create')),
 	array('label'=>'Update VehicleParts', 'url'=>array('update', 'id'=>$model->id)),
 	array('label'=>'Delete VehicleParts', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
@@ -24,5 +24,6 @@ $this->menu=array(
 		'id',
 		'name',
 		'description',
+		'v_model_id',
 	),
 )); ?>

@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List VehicleParts', 'url'=>array('index')),
+	//array('label'=>'List VehicleParts', 'url'=>array('index')),
 	array('label'=>'Create VehicleParts', 'url'=>array('create')),
 	array('label'=>'View VehicleParts', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage VehicleParts', 'url'=>array('admin')),

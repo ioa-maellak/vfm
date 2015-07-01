@@ -31,6 +31,12 @@
 		<?php echo $form->error($model,'description'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'v_model_id'); ?>
+                <?php echo $form->dropDownList($model,'v_model_id',CHtml::listData(VehicleModel::model()->findAll(), 'id', 'name'), array('empty' => 'Select a model', 'id'=>'v_model_id',));?>      
+		<?php echo $form->error($model,'v_model_id'); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

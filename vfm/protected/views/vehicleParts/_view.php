@@ -17,5 +17,9 @@
 	<?php echo CHtml::encode($data->description); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('v_model_id')); ?>:</b>
+	<?php echo CHtml::encode($data->v_model_id); ?>
+	<br />
+
 
 </div>

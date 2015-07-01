@@ -8,8 +8,10 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List VehicleParts', 'url'=>array('index')),
+	//array('label'=>'List VehicleParts', 'url'=>array('index')),
+        array('label'=>'Create VehicleModel', 'url'=>array('vehicleModel/create')),
 	array('label'=>'Create VehicleParts', 'url'=>array('create')),
+        
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -48,6 +50,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'id',
 		'name',
 		'description',
+		'v_model_id',
 		array(
 			'class'=>'CButtonColumn',
 		),

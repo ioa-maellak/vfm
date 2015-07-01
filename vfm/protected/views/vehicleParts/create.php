@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List VehicleParts', 'url'=>array('index')),
+	//array('label'=>'List VehicleParts', 'url'=>array('index')),
 	array('label'=>'Manage VehicleParts', 'url'=>array('admin')),
 );
 ?>
