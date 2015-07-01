@@ -8,6 +8,7 @@ return array (
     'Service' => 'Επισκευές',
     'Shift' => 'Βάρδια',
     'Sectors' => 'Τμήματα',
+    'Parts' => 'Ανταλλακτικά',
     'Users' => 'Χρήστες',
     'Rights' => 'Δικαιώματα',
     'Fleet management system' => 'Σύστημα διαχείρησης οχηματων ',

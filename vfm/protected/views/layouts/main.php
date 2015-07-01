@@ -44,6 +44,9 @@
                 array('label'=>Yii::t('strings', 'Shift'), 'url'=>array('/vehicleShift/create'), 'visible'=>!Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest ),
                 array('label'=>Yii::t('strings', 'Shift'), 'url'=>array('/vehicleShift/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin')),
                 array('label'=>Yii::t('strings', 'Sectors'), 'url'=>array('/sectorEkab/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
+                    
+                array('label'=>Yii::t('strings', 'Parts'), 'url'=>array('/vehicleParts/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
+                
                
                 //main menu access to users & rights extensions
                 array('label'=>Yii::t('strings', 'Users'), 'url'=>array('/user/admin'), 'visible'=>Yii::app()->user->checkAccess('Admin') && !Yii::app()->user->isGuest),
