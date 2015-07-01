@@ -86,7 +86,12 @@ class VehicleController extends RController
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+                 if (isset($model->manufacture_date)){
+                    $model->manufacture_date = date("d/m/Y", strtotime($model->manufacture_date)) ;
+                 }
+                  if (isset($model->registration_date)){
+                    $model->registration_date = date("d/m/Y", strtotime($model->registration_date)) ;
+                 }
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -141,7 +146,22 @@ class VehicleController extends RController
 			'model'=>$model,
 		));
 	}
+        /**
+	 * View Vehicles due for service.
+	 */
+	public function actionViewVehicleForService()
+	{
+		$model=new Vehicle('searchVehicleForService');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Vehicle']))
+			$model->attributes=$_GET['Vehicle'];
 
+		$this->render('viewVehicleForService',array(
+			'model'=>$model,
+		));
+	}
+        
+   
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

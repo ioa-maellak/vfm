@@ -105,22 +105,57 @@ class Vehicle extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id,true);
+              // $criteria->with = array('sectorEkab');
+              // $criteria->compare('sectorEkab.name', Yii::app()->request->getParam('sectorEkab_name'), true);
+	      //$criteria->compare('id',$this->id,true);
 		$criteria->compare('license_plate',$this->license_plate,true);
 		$criteria->compare('running_distance',$this->running_distance);
-		$criteria->compare('manufacture_date',$this->manufacture_date,true);
+         	$criteria->compare('manufacture_date',$this->manufacture_date,true);
 		$criteria->compare('registration_date',$this->registration_date,true);
 		$criteria->compare('status',$this->status,true);
 		$criteria->compare('vehicle_type',$this->vehicle_type,true);
 		$criteria->compare('sector_ekab_id',$this->sector_ekab_id,true);
 		$criteria->compare('nextservice_km',$this->nextservice_km);
-
+               
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+                       
+		));
+                
+                
+                	}
+       
+	//Retrieves a list of models based on the current search/filter conditions.
+	
+	public function searchVehicleForService()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+                $criteria->with = array('sectorEkab');
+                $criteria->compare('sectorEkab.name', Yii::app()->request->getParam('sectorEkab_name'), true);
+ 		$criteria->compare('license_plate',$this->license_plate,true);
+	        $criteria->condition="running_distance - nextservice_km <= 1000";
+            //	$criteria->compare('manufacture_date',$this->manufacture_date,true);
+	//	$criteria->compare('registration_date',$this->registration_date,true);
+	//	$criteria->compare('status',$this->status,true);
+	//	$criteria->compare('vehicle_type',$this->vehicle_type,true);
+	//	$criteria->compare('sector_ekab_id',$this->sector_ekab_id,true);
+		$criteria->compare('nextservice_km',$this->nextservice_km);
+                 $sort = new CSort();
+                $sort->attributes = array(
+                'sectorEkab.name' => array(
+                    'asc' => 'sectorEkab.name ASC',
+                    'desc' => 'sectorEkab.name DESC'
+                    ),
+                    '*'
+                );
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+                     'sort' => $sort
 		));
 	}
-
+        
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
