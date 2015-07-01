@@ -31,11 +31,11 @@ class VehicleServiceController extends RController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update', 'actionDynamicParts'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete', 'actionDynamicParts'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -270,7 +270,35 @@ class VehicleServiceController extends RController
                 }
                 return $vehicle_parts;
         }
-	/**
+        
+        // Depedent dropdown part list
+        public function actionDynamicParts()
+        {
+            $data= VehicleParts::model()->findAll('v_model_id=:v_model_id', 
+                  array(':v_model_id'=>(int) $_POST['id']));
+ 
+            $data=CHtml::listData($data,'id','name');
+              
+            if($_POST['id'] == ''){
+
+                 echo CHtml::tag('option', array('value'=>''),CHtml::encode(''),true);
+            }
+            else
+            {
+                 echo CHtml::tag('option', array('value'=>'0'),CHtml::encode('Select a part'), true);
+                  if (!empty($data) ){
+                    foreach($data as $value=>$name)
+                       {
+                           echo CHtml::tag('option', array('value'=>$value),CHtml::encode($name), true);
+                       }
+                  }
+                  else{
+                      echo CHtml::tag('option', array('value'=>''),CHtml::encode('No parts found'),true);
+                  }
+            }
+        }
+        
+     	/**
 	 * Deletes a particular service model and its vehicle parts.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
